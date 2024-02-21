@@ -16,7 +16,7 @@
         }
         .calculator {
             background-color: #343a40;
-            color: #ffffff;
+            color: #000000;
             padding: 40px 0;
             text-align: center;
         }
@@ -73,9 +73,18 @@
             background-color: #e9ecef;
             cursor: not-allowed;
         }
+        #resultado {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #resultado span {
+            font-weight: bold;
+            color: #28a745;
+        }
     </style>
 
-</head>
+</head>  
 <body>
 
 <div class="calculator">
@@ -110,30 +119,16 @@
     <label for="cantidad">Cantidad:</label>
     <input type="text" id="cantidad" class="form-control" required>
 
-    <style>
-    .radio-group {
-        display: flex;
-        align-items: center;
-    }
-
-    .radio-group input[type="radio"] {
-        margin-right: 5px;
-    }
-
-    .radio-group label {
-        margin: 0;
-    }
-    </style>
-
 <div class="radio-group">
     <input type="radio" id="radioPersonas" name="conversion" value="personas" checked>
     <label for="radioPersonas">Personas</label> 
-
     <input type="radio" id="radioPiezas" name="conversion" value="piezas">
     <label for="radioPiezas">Piezas</label>
 </div>
 
     <button type="button" onclick="convertir()" class="btn btn-success">Convertir</button>
+    <div id="resultado"></div>
+
 </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -243,6 +238,7 @@
     function convertir() {
         var cantidad = parseFloat(document.getElementById("cantidad").value);
         var radioPersonas = document.getElementById("radioPersonas");
+        var resultadoDiv = document.getElementById("resultado");
 
         var plataforma = document.getElementById("plataforma").value;
         var linea = document.getElementById("linea").value;
@@ -251,30 +247,28 @@
 
         if (radioPersonas.checked) {
             var piezasConvertidas = (cantidad / personasNecesarias) * piezasNecesarias;
-            alert(cantidad + " personas equivalen a " + piezasConvertidas + " piezas.");
+            resultadoDiv.innerHTML = `<span>${cantidad} personas equivalen a ${piezasConvertidas.toFixed(0)} piezas.</span>`;
         } else {
             var personasConvertidas = (cantidad / piezasNecesarias) * personasNecesarias;
-            alert(cantidad + " piezas equivalen a " + personasConvertidas + " personas.");
+            resultadoDiv.innerHTML = `<span>${cantidad} piezas equivalen a ${personasConvertidas.toFixed(1)} personas.</span>`;
         }
+        resultadoDiv.style.display = "block";
     }
 
     document.getElementById("plataforma").addEventListener("change", function () {
         var plataforma = this.value;
         var lineaSelect = document.getElementById("linea");
         lineaSelect.innerHTML = "";
-
         for (var linea in datosLinea[plataforma]) {
             var option = document.createElement("option");
             option.value = linea;
             option.text = linea;
             lineaSelect.add(option);
         }
-
         actualizarDatos();
     });
-
     actualizarDatos();
+    
 </script>
-
 </body>
 </html>
